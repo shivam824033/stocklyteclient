@@ -1,0 +1,9 @@
+.card-header {
+  font-size: 1.1rem;
+}
+.table th, .table td {
+  vertical-align: middle;
+}
+.badge {
+  font-size: 0.95em;
+}

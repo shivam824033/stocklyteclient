@@ -1,0 +1,112 @@
+/* Background Image and Overlay */
+body, .background-wrapper {
+    min-height: 100vh;
+    background: linear-gradient(rgba(255,255,255,0.85), rgba(255,255,255,0.85)),
+        url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1500&q=80') no-repeat center center fixed;
+    background-size: cover;
+}
+
+/* Navbar */
+.navbar {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    border-radius: 0 0 12px 12px;
+    background: #f8f9faee !important;
+}
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: #007bff !important;
+    letter-spacing: 1px;
+}
+
+.nav-link {
+    font-weight: 500;
+    color: #333 !important;
+    transition: color 0.2s;
+}
+
+.nav-link.active, .nav-link:focus, .nav-link:hover {
+    color: #007bff !important;
+}
+
+/* Modern Button Styles */
+.btn-outline-success, .btn-outline-dark {
+    margin-left: 8px;
+    border-radius: 24px;
+    font-weight: 600;
+    font-size: 1.08rem;
+    padding: 8px 28px;
+    box-shadow: 0 2px 8px rgba(0,123,255,0.08);
+    border: none;
+    background: linear-gradient(90deg, #007bff 0%, #00c6ff 100%);
+    color: #fff !important;
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+
+.btn-outline-dark {
+    background: linear-gradient(90deg, #343a40 0%, #007bff 100%);
+}
+
+.btn-outline-success:hover, .btn-outline-dark:hover {
+    background: linear-gradient(90deg, #0056b3 0%, #00c6ff 100%);
+    color: #fff !important;
+    box-shadow: 0 4px 16px rgba(0,123,255,0.16);
+}
+
+.btn-outline-dark:hover {
+    background: linear-gradient(90deg, #23272b 0%, #0056b3 100%);
+}
+
+/* Home Section */
+.home {
+    margin: 10px auto 0 auto;
+    /* max-width: 50%; */
+    /* background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.10); */
+    /* padding: 20px 20px; */
+    text-align: center;
+    position: relative;
+    z-index: 2;
+}
+
+.home h1 {
+    font-size: 2.2rem;
+    color: #007bff;
+    font-weight: 700;
+    margin-bottom: 18px;
+}
+
+.home h3 {
+    font-size: 1.2rem;
+    color: #333;
+    margin-bottom: 12px;
+}
+
+.home p {
+    font-size: 1.05rem;
+    margin-bottom: 10px;
+}
+
+.home p[style] {
+    color: #007bff !important;
+    font-weight: 500;
+    transition: text-decoration 0.2s;
+}
+
+.home p[style]:hover, .home span[style]:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/* Responsive */
+/* @media (max-width: 600px) {
+    .home {
+        padding: 18px 6px;
+        max-width: 98vw;
+    }
+    .navbar-brand {
+        font-size: 1.1rem;
+    }
+} */

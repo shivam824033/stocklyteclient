@@ -1,0 +1,154 @@
+/* Container and Card */
+.container {
+    background: #f8f9fa;
+    border-radius: 12px;
+    /* padding: 32px 18px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    margin-top: 24px; */
+}
+
+/* Tabs */
+.nav-tabs .nav-link {
+    font-weight: 500;
+    color: #495057;
+    border-radius: 8px 8px 0 0;
+    margin-right: 4px;
+    transition: background 0.2s, color 0.2s;
+}
+.nav-tabs .nav-link.active {
+    background: #007bff;
+    color: #fff;
+    border: none;
+}
+
+/* Card */
+.card {
+    border-radius: 1rem;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    border: none;
+}
+
+/* Headings */
+h4 {
+    font-weight: 600;
+    color: #007bff;
+    letter-spacing: 1px;
+}
+
+/* Form Styles */
+.form-group label {
+    font-weight: 500;
+    margin-bottom: 6px;
+    color: #333;
+}
+.form-control, .form-select {
+    border-radius: 6px;
+    border: 1px solid #ced4da;
+    background: #f9f9f9;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+}
+.form-control:focus, .form-select:focus {
+    border-color: #007bff;
+    background: #fff;
+    outline: none;
+}
+input[type="date"].form-control {
+    min-width: 140px;
+}
+.error {
+    color: #dc3545;
+    font-size: 0.9em;
+    margin-top: 2px;
+}
+.success {
+    font-size: 0.95em;
+    color: #28a745;
+}
+
+/* Button Styles */
+.btn-primary {
+    background: #007bff;
+    border: none;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 1rem;
+    transition: background 0.2s;
+}
+.btn-primary:hover, .btn-primary:focus {
+    background: #0056b3;
+}
+
+/* Search Section */
+#typeahead-http.form-control {
+    border-radius: 6px;
+    background: #f9f9f9;
+}
+label.col-form-label {
+    font-weight: 500;
+    color: #007bff;
+}
+
+/* Product Result Card */
+.viewProduct .card {
+    background: #23272b;
+    color: #fff;
+    border-radius: 10px;
+    margin-top: 12px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.10);
+}
+.viewProduct .row > .col {
+    padding: 8px 0;
+    font-size: 1.05rem;
+}
+.viewProduct .row:first-child > .col {
+    font-weight: 600;
+    color: #ffc107;
+    border-bottom: 1px solid #444;
+}
+.product-img-preview {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 0.5rem;
+  border: 1px solid #ddd;
+  margin-bottom: 0.5rem;
+}
+.tab-content {
+  margin-top: 1.5rem;
+}
+.add-another-label {
+  color: #007bff;
+  cursor: pointer;
+  font-weight: 500;
+}
+.table-scroll{
+max-height :300px;
+overflow-y: auto
+}
+
+/* Loader overlay styles */
+.loader-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(255,255,255,0.7);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+ /* [ngClass]="{'table-scroll' : billItems.length > 6}" */
+/* Responsive Tweaks */
+@media (max-width: 900px) {
+    .row {
+        flex-direction: column;
+    }
+    .col, .col-auto {
+        width: 100%;
+        margin-bottom: 16px;
+    }
+    .container {
+        padding: 18px 6px;
+    }
+}

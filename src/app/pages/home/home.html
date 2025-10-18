@@ -1,0 +1,29 @@
+<div class="home">
+
+  @if(token==null && !loginFlag && !signupFlag){
+  <div>
+    <h1>Welcome to this page</h1>
+    <h3>Want to open seller Account ? </h3>
+    <p style="color: blue; cursor: pointer;" routerLink="/signup">Sign Up Now</p>
+    <p>if already have account <span style="color: blue; cursor: pointer;" routerLink="/login">login here</span></p>
+  </div>
+  }
+
+  @if(token!==null && token!==undefined){
+
+  @if(ownerFlag){
+  <app-owner></app-owner>
+
+  }
+  @if(sellerFlag){
+  <app-seller></app-seller>
+
+  }
+  @if(publicFlag){
+  <app-public></app-public>
+
+  }
+
+  }
+</div>
+

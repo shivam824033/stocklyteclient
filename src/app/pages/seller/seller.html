@@ -1,0 +1,786 @@
+<!-- Add this loader overlay near the top of your template, just inside the main container -->
+
+@if (isLoading) {
+<div class="loader-overlay">
+  <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
+}
+
+<div class="container my-2">
+  <div class="row p-2">
+    <div class="col">
+      <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link " id="add-product" data-bs-toggle="tab" data-bs-target="#addProduct" type="button"
+            role="tab" aria-controls="addProduct" aria-selected="true">Add Product</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link " id="sell-product" data-bs-toggle="tab" data-bs-target="#sellProduct" type="button"
+            role="tab" aria-controls="sellProduct" aria-selected="false">Sell Product</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="search-product" data-bs-toggle="tab" data-bs-target="#searchProduct"
+            type="button" role="tab" aria-controls="searchProduct" aria-selected="false">Search Product</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="qrbar" data-bs-toggle="tab" data-bs-target="#barqrcode" type="button" role="tab"
+            aria-controls="qr-bar-code" aria-selected="false">Generate Qr/Bar code</button>
+        </li>
+      </ul>
+      <div class="tab-content" id="myTabContent">
+
+        <div class="tab-pane fade " id="addProduct" role="tabpanel" aria-labelledby="add-product">
+          <section class=" py-1 py-md-1">
+            <select class="form-select w-auto mb-3" id="123" name="123" [(ngModel)]="addProductType">
+              <option value="select" disabled>Select </option>
+              <option value="0">Add via excel</option>
+              <option value="1">Add Single Product</option>
+            </select>
+            <div class="container">
+              <div class="row justify-content-center">
+                @if(addProductType == '0'){
+                <div class="col-5">
+                  <div class="card border border-light-subtle rounded-3 shadow-sm">
+                    <div class="container">
+                      <div class="row p-2">
+                        <div class="col">
+                          <h2>Upload Excel (.xls)</h2>
+
+                          <div class="row p-2">
+                            <div class="col">
+                              <input type="file" (change)="onFileSelected($event)" class="form-control mb-3" />
+
+                            </div>
+                            <div class="col-2">
+                              <button class="btn btn-primary" (click)="uploadFile()">Upload</button>
+                            </div>
+                          </div>
+
+
+                          @if(progress > 0){
+                          <div class="mt-3">
+                            <div class="progress">
+                              <div class="progress-bar" role="progressbar" [style.width.%]="progress">
+                                {{ progress }}%
+                              </div>
+                            </div>
+                          </div>
+                          }
+
+
+                          <!-- @if(message){
+                          <div class="mt-3 alert alert-info">
+                            {{ message }}
+                          </div>
+                          } -->
+
+
+                          <div class="alert alert-info">
+                            <strong>Note:</strong> Please ensure that the Excel file follows the correct column name:
+                            <ul style="text-align: start;">
+                              <li>Qty</li>
+                              <li>BatchNo</li>
+                              <li>ProductDesc</li>
+                              <li>MRP</li>
+                              <li>ExpDate and Date Format (dd-mm-yyyy)</li>
+                            </ul>
+                            You can download a sample file <a href="assets/sample_product_upload.xlsx"
+                              download>here</a>.
+                          </div>
+
+
+
+                        </div>
+
+                      </div>
+
+
+                    </div>
+                  </div>
+                </div>
+                }
+
+                @if(addProductType == '1'){
+                <div class="col-5">
+
+                  <div class="card-body">
+                    <h4 class="text-center mb-4">Add Product details</h4>
+                    <div class="row">
+                      <div class="col">
+                        <div class="form-group">
+                          <label for="batchNumber">Batch Number <span style="color: red;">*</span></label>
+                          <input id="batchNumber" class="form-control" type="text" required
+                            [(ngModel)]="product.batchNumber" #batchNumber="ngModel" />
+
+                          @if(batchNumber.invalid && (batchNumber.dirty || batchNumber.touched)){
+                          @if(batchNumber.hasError('required')){
+                          <div class="error">
+                            Batch Number is required.
+                          </div>
+                          }
+                          }
+
+                        </div>
+                      </div>
+                      <div class="col">
+                        <div class="form-group">
+                          <label for="productName">Product Name <span style="color: red;">*</span></label>
+                          <input id="productName" class="form-control" type="text" required
+                            [(ngModel)]="product.productName" #productName="ngModel" />
+
+                          @if(productName.invalid && (productName.dirty || productName.touched)){
+                          @if(productName.hasError('required')){
+                          <div class="error">
+                            Product Name is required.
+                          </div>
+                          }
+                          }
+
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col">
+                        <div class="form-group">
+                          <label for="expiryDate">Expiry date<span style="color: red;">*</span></label>
+                          <input id="expiryDate" type="date" class="form-control"
+                            [(ngModel)]="product.productExpiryDate" #expiryDate="ngModel" />
+                          @if(expiryDate.invalid && (expiryDate.dirty || expiryDate.touched)){
+                          @if(expiryDate.hasError('required')){
+                          <div class="error">
+                            Expiry date is required.
+                          </div>
+                          }
+                          }
+
+                        </div>
+                      </div>
+                      <div class="col">
+                        <div class="form-group">
+                          <label for="productCategory">Product Category<span style="color: red;">*</span></label>
+                          <select id="productCategory" class="form-select" [(ngModel)]="product.productCategory"
+                            #productCategory="ngModel">
+                            <option value="" disabled>Select</option>
+                            <option *ngFor="let item of categories2" [value]="item.id">{{item.name}}</option>
+                          </select>
+
+                          @if(productCategory.invalid && (productCategory.dirty || productCategory.touched)){
+                          @if(productCategory.hasError('required')){
+                          <div class="error">
+                            Product Category is required.
+                          </div>
+                          }
+                          }
+
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col">
+                        <div class="form-group">
+                          <label for="quantity">Qaunity<span style="color: red;">*</span></label>
+                          <input id="quantity" type="number" class="form-control" required
+                            [(ngModel)]="product.productStripCount" #quantity="ngModel" />
+
+                          @if(quantity.invalid && (quantity.dirty || quantity.touched)){
+                          @if(quantity.hasError('required')){
+                          <div class="error">
+                            Qaunity is required.
+                          </div>
+                          }
+                          }
+
+                        </div>
+                      </div>
+                      <div class="col">
+                        <div class="form-group">
+                          <label for="productPerPrice"> Product Price<span style="color: red;">*</span></label>
+                          <input id="productPerPrice" class="form-control" type="number" required
+                            [(ngModel)]="product.productPerPrice" #productPerPrice="ngModel" />
+
+                          @if(productPerPrice.invalid && (productPerPrice.dirty || productPerPrice.touched)){
+                          @if(productPerPrice.hasError('required')){
+                          <div class="error">
+                            Product Price is required.
+                          </div>
+                          }
+                          }
+
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col">
+                        <div class="form-group">
+                          <label for="productDescription">Product Description <span style="color: red;">*</span></label>
+                          <textarea id="productDescription" class="form-control" type="text" required
+                            [(ngModel)]="product.productDescription" #productDescription="ngModel"></textarea>
+
+                          @if(productDescription.invalid && (productDescription.dirty || productDescription.touched)){
+                          @if(productDescription.hasError('required')){
+                          <div class="error">
+                            Product Description is required.
+                          </div>
+                          }
+                          }
+
+
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row mt-1">
+                      @if(errorMessage){
+                      <div class="alert alert-danger" role="alert">
+                        {{errorMessage}}
+                      </div>
+                      }
+                      @if(successMessage){
+                      <div class="alert alert-success" role="alert">
+                        {{successMessage}}
+                      </div>
+                      }
+
+                    </div>
+                    <div class="row mt-1">
+                      <div class="col-5">
+                        <div class="d-grid my-3">
+                          <button class="btn btn-primary btn-md" type="submit" (click)="addProduct('')"
+                            [disabled]="addAnotherbtn">Add Product</button>
+                        </div>
+                      </div>
+
+                      @if(addAnotherbtn){
+                      <div class="col-5">
+                        <div class="d-grid my-3">
+                          <button class="btn btn-success btn-md" type="submit" (click)="addProduct('addAnother')"
+                            [disabled]="!addAnotherbtn">Add & Add Another</button>
+                        </div>
+                      </div>
+                      }
+
+                    </div>
+                  </div>
+
+                </div>
+                }
+
+                <div class="col">
+                  @if(message){
+                  <div class="mt-3 alert alert-info">
+                    {{ message }}
+                  </div>
+                  }
+                </div>
+
+              </div>
+            </div>
+          </section>
+
+        </div>
+        <!-- ...existing code... -->
+        <div class="tab-pane fade " id="sellProduct" role="tabpanel" aria-labelledby="sell-product">
+          <section class="py-1">
+            <div class="container">
+              <div class="row g-4">
+                <!-- Left: Product Search & Add to Bill -->
+                <div class="col-md-4">
+                  <div class="card row shadow-sm border-0 h-100">
+                    <div class="card-body">
+                      <h4 class="mb-2 text-primary"><i class="bi bi-cart-plus"></i> Sell Product / Billing</h4>
+                      <form (ngSubmit)="addToBill()" #billForm="ngForm">
+                        <div class=" row mb-1">
+                          <label for="sellProductSearch" class="form-label"
+                            style="text-align: start; font-weight: 600;">Product :</label>
+                          <div class="col">
+                            <input id="sellProductSearch" type="text" class="form-control"
+                              [(ngModel)]="searchProductTemp" name="selectedProductName" [ngbTypeahead]="searchProduct2"
+                              [resultTemplate]="rt" [inputFormatter]="formatter"
+                              (selectItem)="onProductSelectForBilling($event)" placeholder="Search product..." required>
+                          </div>
+
+                        </div>
+                        <div class=" row mb-1">
+                          <label for="sellQuantity" class="form-label"
+                            style="text-align: start; font-weight: 600;">Quantity :</label>
+                          <div class="col">
+
+                            <input id="sellQuantity" type="number" class="form-control" [(ngModel)]="sellQuantity"
+                              name="sellQuantity" min="1" required>
+                          </div>
+                          <div class="col">
+                            <button class="btn btn-success w-100" type="submit"
+                              [disabled]="!selectedProduct || !sellQuantity">Add to Bill</button>
+                          </div>
+
+
+                        </div>
+                        <div class="mb-1">
+
+                        </div>
+                      </form>
+
+                      @if(billSuccessMessage){
+                      <div class="alert alert-success mt-3">{{billSuccessMessage}}</div>
+                      }
+                      @if(billErrorMessage){
+                      <div class="alert alert-danger mt-3">{{billErrorMessage}}</div>
+                      }
+
+                    </div>
+
+                    <!-- scanner code  start-->
+                    <div class="row">
+                      <!-- <h3> ngx-scanner-qrcode </h3> -->
+                      <hr />
+                      <div class="row p-2 justify-content-center align-items-center">
+                        <div class="col-auto">
+                          <h4>Scan Bar code : </h4>
+                        </div>
+                        <div class="col-auto">
+                          <input type="radio" name="option" id="option1" value="Y" [(ngModel)]="isBarCodeEnable"/>
+                          <label for="option1">Yes</label> &nbsp;
+                          <input type="radio" name="option" id="option2" value="N" [(ngModel)]="isBarCodeEnable"
+                            (click)="handle(action, action.isStart ? 'stop' : 'start')" />
+                          <label for="option2">No</label>
+                        </div>
+                      </div>
+
+
+                      <br />
+
+                      @if(isBarCodeEnable == 'Y'){
+
+                      <!-- devices -->
+                      <div class="row">
+                        <div class="col">
+                          <select #select1 (change)="action.playDevice(select1.value)"
+                            class="form-select form-select-sm">
+                            <option [value]="null" selected>Select device</option>
+                            <option *ngFor="let c of action.devices.value; let i = index" [value]="c.deviceId"
+                              [selected]="i == action.deviceIndexActive">{{c.label}}</option>
+                          </select>
+                        </div>
+
+                        <div class="col">
+                          <select #select2 (change)="action.decode = select2.value" class="form-select form-select-sm">
+                            <option value="utf-8" [selected]="action.decode == 'utf-8'">UTF-8</option>
+                            <option value="iso-8859-15" [selected]="action.decode == 'iso-8859-15'">ISO-8859-15</option>
+                            <option value="windows-1252" [selected]="action.decode == 'windows-1252'">Windows-1252
+                            </option>
+                            <option value="macintosh" [selected]="action.decode == 'macintosh'">Macintosh</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <!-- data  -->
+
+                      <!-- loading -->
+                      @if(action.isLoading) {
+                      <p>⌛ Loading...</p>
+                      }
+
+
+                      <div class="row p-3">
+                        <div class="col"></div>
+
+                        <div class="col">
+                          <!-- ngx-scanner-qrcode -->
+                          <div class="p-2 d-flex justify-content-center">
+                            <div>
+                              <ngx-scanner-qrcode #action="scanner" [config]="config" (event)="onEvent($event, action)"
+                                class="hidden-video" style="width:50px;height:50px;overflow:hidden;">
+                              </ngx-scanner-qrcode>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <!-- start/stop -->
+
+                          <button class="btn" [class.btn-info]="!action.isStart" [class.btn-warning]="action.isStart"
+                            [disabled]="action.isLoading" (click)="handle(action, action.isStart ? 'stop' : 'start')">
+                            <img
+                              [src]="action.isStart ? 'https://id1945.github.io/images/svg/camera-off.svg' : 'https://id1945.github.io/images/svg/camera-on.svg'"
+                              width="30px" />
+                          </button>
+                        </div>
+                        <div class="col">
+                          <!-- play/pause -->
+                          <button class="btn" [class.btn-info]="!action.isStart" [class.btn-warning]="action.isStart"
+                            [disabled]="!action.isStart" (click)="handle(action, action.isPause ? 'play' : 'pause')">
+                            <img
+                              [src]="action.isPause ? 'https://id1945.github.io/images/svg/play.svg': 'https://id1945.github.io/images/svg/pause.svg'"
+                              width="30px" />
+                          </button>
+                        </div>
+                        <div class="col">
+                          <!-- isTorch -->
+                          <!-- <button class="btn" [class.btn-info]="!action.isStart" [class.btn-warning]="action.isStart"
+                            [disabled]="!action.isStart"
+                            (click)="action.isTorch = !action.isTorch; handle(action, 'torcher')">
+                            <img
+                              [src]="action.isTorch ? 'https://id1945.github.io/images/svg/flash-off.svg' : 'https://id1945.github.io/images/svg/flash-on.svg'"
+                              width="30px" />
+                          </button> -->
+                        </div>
+                        <!-- <div class="col"> -->
+                        <!-- download -->
+                        <!-- <button class="btn" [class.btn-info]="!action.isStart" [class.btn-warning]="action.isStart"
+                            [disabled]="!action.isStart" (click)="handle(action, 'download')">
+                            <img src="https://id1945.github.io/images/svg/capture.svg" width="30px" />
+                          </button> -->
+                        <!-- </div> -->
+                      </div>
+
+                      <div class="row">
+                        <div class="col">
+                          <p class="data">{{ result }}</p>
+
+                        </div>
+                      </div>
+                    }
+                    </div>
+                    <!-- scanner code end -->
+                  </div>
+
+                </div>
+                <!-- Right: Customer Details & Bill Table -->
+                <div class="col">
+                  <div class="card border-0 shadow-sm mb-1">
+                    <div class="card-body">
+
+                      @if (!invoiceViewFlag) {
+                      <h5 class="mb-3 text-primary">Customer Billing Details</h5>
+                      <div class="d-flex align-items-end gap-3 mb-3 flex-wrap"
+                        style="text-align: start; font-weight: 600;">
+                        <div>
+                          <label for="customerName" class="form-label mb-1">Customer Name <span
+                              style="color: red;">*</span></label>
+                          <input type="text" id="customerName" class="form-control" [(ngModel)]="customerName"
+                            name="customerName" placeholder="Enter customer name">
+                        </div>
+                        <div>
+                          <label for="customerMobile" class="form-label mb-1">Mobile Number</label>
+                          <input type="text" id="customerMobile" class="form-control" [(ngModel)]="customerMobile"
+                            name="customerMobile" placeholder="Enter mobile number">
+                        </div>
+                        <div>
+                          <label for="customerAddress" class="form-label mb-1">Address</label>
+                          <input type="text" id="customerAddress" class="form-control" [(ngModel)]="customerAddress"
+                            name="customerAddress" placeholder="Enter address">
+                        </div>
+                      </div>
+                      }
+
+                      <!-- Invoice Preview -->
+                      @if(invoicePreview && invoiceViewFlag){
+                      @if(invoicePreview){
+                      <div class="d-flex justify-content-end mb-2">
+                        <button class="btn btn-secondary me-2" (click)="backToBilling()">
+                          <i class="bi bi-arrow-left"></i> Back to Billing
+                        </button>
+                        <button class="btn btn-outline-primary" (click)="printInvoice()">
+                          <i class="bi bi-printer"></i> Print / Download PDF
+                        </button>
+                      </div>
+                      <div id="invoiceContent">
+                        <!-- ...the invoice preview card code from previous answer... -->
+                        <div class="card shadow-lg">
+                          <div
+                            class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                            <div>
+                              <h5 class="mb-0">Invoice Preview</h5>
+                              <small>Invoice #: <strong>{{ invoicePreview.invoice.invoice_number }}</strong></small>
+                            </div>
+                            <div>
+                              <span class="badge bg-light text-dark">Date: {{ invoicePreview.invoice.invoice_date |
+                                date:'medium' }}</span>
+                            </div>
+                          </div>
+                          <div class="card-body">
+                            <!-- Customer Info -->
+                            <div class="row mb-3">
+                              <div class="col-md-6">
+                                <h6 class="fw-bold mb-1">Customer Details</h6>
+                                <div><strong>Name:</strong> {{ invoicePreview.customer.name }}</div>
+                                <div><strong>Mobile:</strong> {{ invoicePreview.customer.mobile }}</div>
+                                <div *ngIf="customerAddress"><strong>Address:</strong> {{ customerAddress }}</div>
+                              </div>
+                              <div class="col-md-6 text-md-end mt-3 mt-md-0">
+                                <h6 class="fw-bold mb-1">Total Amount</h6>
+                                <div style="font-size: 1.5rem;" class="text-success fw-bold">
+                                  ₹{{ invoicePreview.invoice.total_amount | number:'1.2-2' }}
+                                </div>
+                              </div>
+                            </div>
+                            <!-- Product Table -->
+                            <div class="table-responsive">
+                              <table class="table table-bordered table-hover align-middle">
+                                <thead class="table-light">
+                                  <tr>
+                                    <th>#</th>
+                                    <th>Batch Number</th>
+                                    <th>Product Name</th>
+                                    <th>Qty</th>
+                                    <th>Price (₹)</th>
+                                    <th>Discount (%)</th>
+                                    <th>Subtotal (₹)</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr *ngFor="let prod of invoicePreview.products; let i = index">
+                                    <td>{{ i + 1 }}</td>
+                                    <td>{{ prod.batch_number }}</td>
+                                    <td>{{ prod.product_name }}</td>
+                                    <td>{{ prod.quantity }}</td>
+                                    <td>{{ prod.price | number:'1.2-2' }}</td>
+                                    <td>{{ prod.discount || 0 }}</td>
+                                    <td>{{ prod.subtotal | number:'1.2-2' }}</td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                            <!-- Summary -->
+                            <div class="d-flex justify-content-end mt-3">
+                              <div>
+                                <div class="fw-bold">Grand Total: <span class="text-success">₹{{
+                                    invoicePreview.invoice.total_amount | number:'1.2-2' }}</span></div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      }
+
+                      }
+
+                      <!-- Bill Details Table -->
+                      @if(billItems && billItems.length > 0 && !invoiceViewFlag){
+                      <!-- <h5 class="mb-3 text-primary">Bill Details</h5> -->
+                      <div style="max-height: 300px; overflow-y: auto;">
+                        <table class="table table-bordered align-middle" style="font-size: 0.95rem;">
+                          <thead class="table-light" style="position: sticky; top: 0; z-index: 1;">
+                            <tr style="height: 32px;">
+                              <th style="width: 19%;">Product Name</th>
+                              <th style="width: 20%;">Batch Number</th>
+                              <th style="width: 18%;">Expiry</th>
+                              <th style="width: 7%;">Quantity</th>
+                              <th style="width: 10%;">Price/Unit</th>
+                              <th style="width: 10%;">Dis(%)</th>
+                              <th style="width: 10%;">Subtotal</th>
+                              <th style="width: 6%;">Remove</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let item of billItems; let i = index"
+                              [ngClass]="{'table-danger': item.error, 'table-warning': item.warning}"
+                              style="height: 32px;">
+                              <td class="py-1">{{item.productName}}</td>
+                              <td class="py-1">{{item.batchNumber}}</td>
+                              <td class="py-1">{{item.productExpiryDate | date}}</td>
+                              <td class="py-1">
+                                <input type="number" min="1" class="form-control form-control-sm"
+                                  [(ngModel)]="item.quantity" name="quantity{{i}}" (ngModelChange)="onQuantityChange(i)"
+                                  style="width:70px; height:28px; padding:2px 6px; font-size:0.95rem;" />
+                              </td>
+                              <td class="py-1">{{item.productPerPrice}}</td>
+                              <td class="py-1">
+                                <input type="number" min="0" max="100" class="form-control form-control-sm"
+                                  [(ngModel)]="item.discount" name="discount{{i}}" (ngModelChange)="onDiscountChange(i)"
+                                  style="width:70px; height:28px; padding:2px 6px; font-size:0.95rem;" />
+                              </td>
+                              <td class="py-1">{{ getTotalBillPerPRoduct(item) | number:'1.2-2' }}</td>
+                              <td class="py-1">
+                                <button class="btn btn-danger btn-sm py-0 px-2" style="font-size:0.9rem; height:28px;"
+                                  (click)="removeBillItem(i)">X</button>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="text-end mb-2">
+                        <h5>
+                          Total: ₹{{getBillTotal() | number:'1.2-2'}}
+                        </h5>
+                        <button class="btn btn-primary" (click)="finalizeBill()">Finalize Bill</button>
+                      </div>
+                      }
+
+                    </div>
+                  </div>
+                </div>
+                <!-- End Right -->
+              </div>
+            </div>
+          </section>
+        </div>
+        <!-- ...existing code... -->
+        <!-- ...existing code... -->
+        <div class="tab-pane fade show active" id="searchProduct" role="tabpanel" aria-labelledby="search-product">
+          <section>
+            <div class="container py-4">
+              <div class="row g-4">
+                <div class="col-md-4">
+                  <div class="card shadow-sm border-0 h-100">
+                    <div class="card-body">
+                      <h5 class="card-title mb-3 text-primary">
+                        <i class="bi bi-search"></i> Search Product
+                      </h5>
+                      <div class="position-relative d-flex align-items-center mb-3">
+                        <input id="typeahead-http" type="text" class="form-control pe-5"
+                          [class.is-invalid]="searchFailed" [(ngModel)]="model" [ngbTypeahead]="searchProduct"
+                          [resultTemplate]="rt" [inputFormatter]="formatter" (selectItem)="onProductselect($event)"
+                          placeholder="Please enter medicine details" />
+
+                        <!-- Clear Icon -->
+                        @if(model){
+                        <span class="position-absolute end-0 top-50 translate-middle-y me-3"
+                          style="cursor:pointer; font-size: 1.2rem; color: #6c757d;" (click)="model = null">
+                          ✕
+                        </span>
+                        }
+
+                      </div>
+
+                      <div class="mb-3">
+                        <label class="form-label fw-semibold">Check Expired Products before:</label>
+                        <div class="input-group">
+                          <input type="date" class="form-control" [(ngModel)]="expiredProductDate">
+                          <button class="btn btn-outline-secondary" type="button"
+                            (click)="fetchExpiredProducts()">Fetch</button>
+                        </div>
+                        @if(expiredProductError){
+                        <div class="text-danger mt-1">{{ expiredProductError }}</div>
+
+                        }
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col">
+                  <div class="row g-3">
+                    <div class="col-12" *ngIf="searchShow">
+                      <div class="card shadow-sm border-0 mb-3">
+                        <div class="card-header bg-info text-white fw-bold">
+                          Product Details
+                        </div>
+                        <div class="card-body">
+                          <div class="row text-center fw-semibold mb-2">
+                            <div class="col">Batch Number</div>
+                            <div class="col">Expiry date</div>
+                            <div class="col">Quantity</div>
+                            <div class="col">Price</div>
+                          </div>
+                          <div class="row text-center mb-3">
+                            <div class="col">{{productSearchResult.batchNumber}}</div>
+                            <div class="col">{{productSearchResult.productExpiryDate | date}}</div>
+                            <div class="col">{{productSearchResult.productStripCount}}</div>
+                            <div class="col">{{productSearchResult.productPerPrice}}</div>
+                          </div>
+                          <hr>
+                          <div>
+                            <h6 class="fw-bold mb-1">Product Name :</h6>
+                            <p class="mb-2">{{productSearchResult.productName}}</p>
+                            <h6 class="fw-bold mb-1">Product Description :</h6>
+                            <p>{{productSearchResult.productDescription}}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-12" *ngIf="expiryShow">
+                      <div class="card shadow-sm border-0">
+                        <div class="card-header bg-warning text-dark fw-bold">
+                          Expired Products
+                        </div>
+                        <div class="card-body p-0">
+
+                          @if(expiredProducts.length){
+                          <div style="max-height: 400px; overflow-y: auto; margin-top: 10px;">
+                            <table class="table table-bordered table-striped mb-0">
+                              <thead class="table-light">
+                                <tr>
+                                  <th>Product Name</th>
+                                  <th>Batch Number</th>
+                                  <th>Expiry Date</th>
+                                  <th>Stock</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr *ngFor="let prod of expiredProducts">
+                                  <td>{{ prod.product_name }}</td>
+                                  <td>{{ prod.batch_number }}</td>
+                                  <td>{{ prod.expiry_date | date }}</td>
+                                  <td>{{ prod.strip_count }}</td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                          }
+
+
+                          @if(!expiredProducts.length){
+                          <div class="text-center text-muted py-3">
+                            No expired products found for the selected date.
+                          </div>
+                          }
+
+                        </div>
+                      </div>
+                    </div>
+                  </div> <!-- row g-3 -->
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <div class="tab-pane fade " id="barqrcode" role="tabpanel" aria-labelledby="qr-bar-code">
+          <section class=" py-1 py-md-1">
+            <div class="container">
+              <div class="row g-4">
+                <div class="col-md-4">
+                  <div class="card shadow-sm border-0 h-100">
+                    <div class="card-body">
+                      <h5 class="card-title mb-3 text-primary">
+                        <i class="bi bi-upc-scan"></i> Generate QR/Bar Code
+                      </h5>
+                      <div class=" row p-2 position-relative d-flex align-items-center mb-3">
+                        <input type="text" [(ngModel)]="batchIds" placeholder="Enter Batch IDs separated by commas"
+                          class="form-control mb-3" />
+                        <button class="btn btn-sm btn-primary" (click)="downloadPDF()">
+                          Download PDF
+                        </button>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col">
+
+                </div>
+              </div>
+            </div>
+
+          </section>
+        </div>
+
+
+
+        <!-- ...existing code... -->
+      </div>
+    </div>
+  </div>
+
+
+  <ng-template #rt let-r="result" let-t="term">
+    <div class="p-2 rounded" style="background: #f0f7fa;">
+      <span class="fw-bold text-primary">{{ r.productName }}</span>
+      <span class="mx-2" style="font-size: 1.1rem; color: #0b0101;">|</span>
+      <span class="badge bg-info text-dark ms-2">Batch Number: {{ r.batchNumber }}</span>
+      <!-- <span class="badge bg-warning text-dark ms-2">Exp: {{ r.productExpiryDate | date }}</span>
+    <span class="badge bg-success ms-2">₹{{ r.productPerPrice }}</span> -->
+    </div>
+  </ng-template>

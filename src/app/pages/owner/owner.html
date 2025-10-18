@@ -1,0 +1,128 @@
+<!-- Admin Dashboard -->
+<div class="container py-2">
+  <h2 class="mb-2 text-primary"><i class="bi bi-shield-lock"></i> Admin Dashboard</h2>
+
+  <!-- Secret Key Section -->
+  <div class="card shadow-sm mb-2">
+    <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+      <span><i class="bi bi-key"></i> Generate Seller Secret Key</span>
+      <button class="btn btn-danger btn-sm" (click)="generateKey()">
+        <i class="bi bi-key"></i> Generate Key
+      </button>
+    </div>
+    <div class="card-body">
+      @if(secretKeyRes.secretKey){
+        <strong>Secret Key:</strong> {{secretKeyRes.secretKey}}
+      }
+
+      @if(!secretKeyRes.secretKey){
+      <div class="text-muted">
+        Click the button to generate a new secret key for seller
+        registration.
+      </div>
+      }
+
+    </div>
+  </div>
+
+  <!-- User Management Section -->
+  <div class="card shadow-sm mb-2">
+    <div class="card-header bg-primary text-white">
+      <i class="bi bi-people"></i> User Management
+    </div>
+    <div class="card-body">
+      <!-- Filter -->
+      <div class="row mb-1">
+        <div class="col-2">
+          <label>Filter by Role:</label>
+        </div>
+        <div class="col-2">
+          <select class="form-select" [(ngModel)]="selectedRole" (change)="fetchUsers()">
+            <option value="">All</option>
+            <option value="PUBLIC">Public</option>
+            <option value="SELLER">Seller</option>
+            <option value="OWNER">Owner</option>
+          </select>
+        </div>
+
+      </div>
+      <!-- User Table -->
+      <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+        <table class="table table-bordered table-hover align-middle">
+          <thead class="table-light" style="position: sticky; top: 0; z-index: 1;">
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Username</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of users; let i = index">
+              <td>{{i + 1}}</td>
+              <td>{{user.fullName}}</td>
+              <td>{{user.email}}</td>
+              <td>{{user.username}}</td>
+              <td><span class="badge bg-info text-dark">{{user.roles}}</span></td>
+              <td>
+                <!-- <span [ngClass]="{'badge bg-secondary': user.accountStatus=='ACTIVE', 'badge bg-success': user.accountStatus !=='ACTIVE'}">
+                  {{user.accountStatus=='ACTIVE' ? 'Active11' : 'Inactive'}}
+                </span> -->
+                <span [ngClass]="user.accountStatus=='ACTIVE' ? 'badge bg-success' :'badge bg-danger' ">
+                  {{user.accountStatus=='ACTIVE' ? 'Active' : 'Inactive'}}
+                </span>
+              </td>
+              <td>
+                <!-- <button class="btn btn-outline-primary btn-sm me-2" (click)="viewUser(user)">
+                  <i class="bi bi-eye">View</i>
+                </button> -->
+                <button class="btn btn-outline-primary btn-sm me-2" [disabled]="user.accountStatus=='ACTIVE'"
+                  (click)="activateUser(user)">
+                  <i class="bi bi-eye">Activate</i>
+                </button>
+                <button class="btn btn-outline-danger btn-sm" [disabled]="user.accountStatus!=='ACTIVE'"
+                  (click)="deactivateUser(user)">
+                  <i class="bi bi-person-x">Deactivate</i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- No users found -->
+       @if(users.length === 0){
+      <div class="text-center text-muted py-3">
+        No users found for the selected role.
+      </div>
+       }
+
+    </div>
+  </div>
+
+  <!-- User Details Modal -->
+  <div class="modal fade" id="userDetailModal" tabindex="-1" aria-labelledby="userDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title" id="userDetailModalLabel"><i class="bi bi-person"></i> User Details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" *ngIf="selectedUser">
+          <p><strong>Name:</strong> {{selectedUser.name}}</p>
+          <p><strong>Email:</strong> {{selectedUser.email}}</p>
+          <p><strong>Mobile:</strong> {{selectedUser.mobile}}</p>
+          <p><strong>Role:</strong> {{selectedUser.role}}</p>
+          <p><strong>Status:</strong>
+            <span [ngClass]="{'badge bg-success': selectedUser.active, 'badge bg-secondary': !selectedUser.active}">
+              {{selectedUser.active ? 'Active' : 'Inactive'}}
+            </span>
+          </p>
+          <!-- Add more fields as needed -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

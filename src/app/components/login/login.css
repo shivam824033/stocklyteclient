@@ -1,0 +1,15 @@
+.error{
+    color: red;
+    font-weight: normal;
+}
+
+.signup{
+    padding: 5%;
+    padding-left: 20%;
+    padding-right: 20%;
+}
+
+.heading3{
+    color: black;
+    font-weight: bold;
+}
